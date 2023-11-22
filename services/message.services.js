@@ -80,20 +80,3 @@ class MessageService {
     }
 }
 module.exports = new MessageService()
-// getFilteredPeople(min, max) {
-//     return new Promise((res, rej) => {
-//         fs.readFile('data.json', 'utf8', (error, data) => {
-//             if (error) {
-//                 reject(error)
-//             } else {
-//                 const obj = JSON.parse(data)
-//                 const filteredPeople = obj.filter(item => item.age > min && item.age < max)
-//                 if (filteredPeople.length === 0) {
-//                     rej('Массив пуст')
-//                 } else {
-//                     res(filteredPeople)
-//                 }
-//             }
-//         })
-//     })
-// }
