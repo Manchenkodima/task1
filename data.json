@@ -1,5 +1,17 @@
 [
    {
+      "id": 1,
+      "name": "Dima",
+      "age": "29",
+      "isMan": "true"
+   },
+   {
+      "id": "sdask",
+      "name": "PAVEL",
+      "age": "27",
+      "isMan": "true"
+   },
+   {
       "id": 3,
       "name": "Alisa",
       "age": "3",
@@ -12,7 +24,9 @@
       "isMan": "false"
    },
    {
-      "name": "P",
-      "age": "50"
+      "id": 0,
+      "name": "Alex",
+      "age": 40,
+      "isMan": true
    }
 ]

@@ -15,7 +15,7 @@ class MessageService {
             })
         })
     }
-    createMessage(newMessage){
+    createMessage(newMessage) {
         return new Promise((res, rej) => {
             let message = fs.readFile('message.json', 'utf8', (error, message) => {
                 if (error) {
@@ -34,21 +34,21 @@ class MessageService {
             })
         })
     }
-    editMessage(id, messageData){
+    editMessage(id, messageData) {
         return new Promise((res, rej) => {
             fs.readFile('message.json', 'utf8', (err, message) => {
-                if(err){
+                if (err) {
                     rej(err)
                 } else {
                     const obj = JSON.parse(message)
                     const index = obj.findIndex(item => item.id === id)
-                    if(index === -1 ){
+                    if (index === -1) {
                         rej('Не существует')
                     } else {
-                        const updateMessage = {...obj[index], ...messageData}
+                        const updateMessage = { ...obj[index], ...messageData }
                         obj[index] = updateMessage
-                        fs.writeFile('message.json', JSON.stringify(obj,null,3), 'utf8', err => {
-                            if(err){
+                        fs.writeFile('message.json', JSON.stringify(obj, null, 3), 'utf8', err => {
+                            if (err) {
                                 rej(err)
                             } else {
                                 res(obj)
@@ -59,26 +59,41 @@ class MessageService {
             })
         })
     }
-    deleteMessage(id){
+
+
+    deleteMessage(min, max) {
         return new Promise((resolve, rejects) => {
             fs.readFile('message.json', 'utf8', (error, message) => {
-                if(error){
+                if (error) {
                     rejects(error)
                 } else {
                     const obj = JSON.parse(message)
-                    const index = obj.findIndex(item => item.id === id)
-                    obj.splice(index, 1)
-                    fs.writeFile('message.json', JSON.stringify(obj, null, 3), 'utf8', error => {
-                        if(error){
-                            rejects(error)
-                        } else {
-                            resolve(obj)
-                        }
-                    })
+                    const filterMessage = obj.filter(item => item.id > min && item.id < max)
+                    if (filterMessage.length === 0) {
+                        rejects('Массив пуст')
+                    } else {
+                        resolve(filterMessage)
+                    }
                 }
             })
         })
     }
 }
-
 module.exports = new MessageService()
+// getFilteredPeople(min, max) {
+//     return new Promise((res, rej) => {
+//         fs.readFile('data.json', 'utf8', (error, data) => {
+//             if (error) {
+//                 reject(error)
+//             } else {
+//                 const obj = JSON.parse(data)
+//                 const filteredPeople = obj.filter(item => item.age > min && item.age < max)
+//                 if (filteredPeople.length === 0) {
+//                     rej('Массив пуст')
+//                 } else {
+//                     res(filteredPeople)
+//                 }
+//             }
+//         })
+//     })
+// }

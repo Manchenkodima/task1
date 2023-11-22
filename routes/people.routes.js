@@ -1,41 +1,40 @@
 const express = require('express')
 const router = express.Router()
 const PeopleControllers = require('../controllers/people.controller')
+const { body, param, query, validationResult } = require('express-validator');
 
-router.get('/', async (req, res) => {
-    try {
-        const people = await PeopleControllers.getPeople()
-        res.send(people)
-    } catch(e){
-        console.log(e)
+
+const isAgeValid = (value) => {
+    if (typeof value === "number" && value > 0 && value < 150) {
+        return true;
     }
-})
-router.post('/create', async (req, res) => {
-   
-    try{
-        const newPeople = await PeopleControllers.createPeople(req.body)
-        res.send(newPeople)
-    } catch(e){
-        console.log(e)
-    }
-})
-router.put('/edit/:id', async (req, res) => {
-   try{
-    const id = +req.params.id
-    const editPeople =  await PeopleControllers.editPeople(id, req.body)
-    res.send(editPeople)
-  } catch (error) {
-    console.log(error)
-  }
-})
-router.delete('/delete/:id', async(req, res) => {
-    try{
-        const id = +req.params.id
-        const updatePeople =  await PeopleControllers.deletePeople(id)
-        res.send(updatePeople)
-      } catch (error) {
-        console.log(error)
-      }
-})
+    return false;
+};
+const validateDataBody = [
+    body('name')
+        .isString()
+        .isAlpha()
+        .isLength({ min: 3, max: 10 }).withMessage("Имя пользователя должно содержать не менее 3 символов"),
+    body('age').custom(isAgeValid).withMessage("Неверно указан возраст"),
+    body('isMan').isBoolean().withMessage("Только булевое значение"),
+    body('id').isInt().withMessage('ID не совпадает')]
+
+const validateDataId = param("id").isInt().withMessage("Такого ID не существует");
+
+const validateDataQuery = [
+    query('min').isInt().withMessage('Минимальный возраст - целое число'),
+    query('max').isInt().withMessage('Максимальный возраст - целое число')]
+
+router.get('/', PeopleControllers.getPeople)
+
+router.get('/filtered', validateDataQuery, PeopleControllers.getFilteredPeople)
+
+router.post('/create', validateDataBody, PeopleControllers.createPeople)
+
+
+router.put('/edit/:id', validateDataId, PeopleControllers.editPeople)
+
+router.delete('/delete/:id', PeopleControllers.deletePeople)
+
 
 module.exports = router

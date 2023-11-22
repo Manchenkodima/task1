@@ -1,41 +1,25 @@
 const express = require('express')
 const router = express.Router()
 const MessageControllers = require('../controllers/message.controller')
+const {body, param, query, validationResult} = require('express-validator')
 
+const validateDataBody = [
+    body('id').isInt().withMessage('ID только число'),
+    body('message').isString().isLength({min: 2, max: 100}).withMessage('Сообщение должно быть min 2 символа')
+]
 
-router.get('/', async (req, res) => {
-    try{
-        const message = await MessageControllers.getMessage()
-        res.send(message)
-    } catch(err){
-        console.log(err)
-    }
-})
-router.post('/create', async (req, res) => {
-    try{
-        const newMessage = await MessageControllers.createMessage(req.body)
-        res.send(newMessage)
-    } catch(err){
-        console.log(err)
-    }
-})
-router.put('/edit/:id', async (req, res) => {
-    try{
-        const id = +req.params.id
-        const editMessage =  await MessageControllers.editMessage(id, req.body)
-        res.send(editMessage)
-    } catch(err){
-        console.log(err)
-    }
-})
-router.delete('/delete/:id', async (req, res) => {
-    try{
-        const id = +req.params.id
-        const updateMessage =  await MessageControllers.deleteMessage(id)
-        res.send(updateMessage)
-      } catch (err) {
-        console.log(err)
-      }
-})
+const validateDataId = param("id").isInt().withMessage("Такого ID не существует");
+
+const validateDataQuery = [
+    query('min').isInt().withMessage('ID начала удаления только число'),
+    query('max').isInt().withMessage('ID конец удаления только число')]
+
+router.get('/', MessageControllers.getMessage)
+
+router.post('/create', validateDataBody, MessageControllers.createMessage)
+
+router.put('/edit/:id', validateDataId, MessageControllers.editMessage)
+
+router.delete('/delete/filter', validateDataQuery, MessageControllers.deleteMessage)
 
 module.exports = router
