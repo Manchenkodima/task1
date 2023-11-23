@@ -6,7 +6,7 @@
       "isMan": "true"
    },
    {
-      "id": "sdask",
+      "id": 2,
       "name": "PAVEL",
       "age": "27",
       "isMan": "true"
@@ -22,11 +22,5 @@
       "name": "Alesia",
       "age": "27",
       "isMan": "false"
-   },
-   {
-      "id": 0,
-      "name": "Alex",
-      "age": 40,
-      "isMan": true
    }
 ]
